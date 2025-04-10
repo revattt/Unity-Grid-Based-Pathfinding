@@ -9,7 +9,8 @@ public class PathfindManager : MonoBehaviour
     public int gridSize = 10;
     void Update()
     {
-        if (Input.GetMouseButton(0) && !player.isMove) //if click and player is not moving then...
+        if (Input.GetMouseButton(0) && !player.isMove && !MovementManager.Instance.isAnyMoving)
+        //if click and player is not moving then...
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); //ray from the mouse pos
             if (Physics.Raycast(ray, out RaycastHit hit)) //stores a hit 

@@ -10,24 +10,28 @@ public class EnemyAI : MonoBehaviour, InterfaceAI //implementing our interface
     public ObstacleData obstacleData;
     public int gridSize = 10;
     private Vector2Int lastKnownPos; //it is the last pos of our player
+    public bool isMoving = false;
+
     public void MakeDecision()
     {
-        if (player == null || player.isMove) return; //player not assigned or player is moving then donot move the enemy 
-        Vector2Int playerPos = new Vector2Int(player.currentX, player.currentY); //used vector2 for x, y pos, it gets the players current tile position
-        if (playerPos != lastKnownPos) //this means the player has moved
+        if (player == null || player.isMove || isMoving) return;
+
+        Vector2Int playerPos = new Vector2Int(player.currentX, player.currentY);
+        if (playerPos != lastKnownPos)
         {
-            Vector2Int target = GetAdjacentTile(playerPos); //this function helps to find adjecant tile of players current tile
-            if (target != currentPos) //enemy will not move if its already standing on the goal 
+            Vector2Int target = GetAdjacentTile(playerPos);
+            if (target != currentPos)
             {
-                List<Vector2Int> path = BFS(currentPos, target); //bfs function takes 2 arguments again
+                List<Vector2Int> path = BFS(currentPos, target);
                 if (path != null && path.Count > 0)
-                    StartCoroutine(MoveAlongPath(path)); //we want the player to be visible when moving thorugh path
+                    StartCoroutine(MoveAlongPath(path));
             }
             lastKnownPos = playerPos;
         }
     }
     public IEnumerator MoveAlongPath(List<Vector2Int> path)
     {
+        isMoving = true;
         foreach (Vector2Int step in path)
         {
             Vector3 targetPos = new Vector3(step.x, 0.5f, step.y);
@@ -38,6 +42,7 @@ public class EnemyAI : MonoBehaviour, InterfaceAI //implementing our interface
             }
             currentPos = step;
         }
+        isMoving = false;
 
     }
     List<Vector2Int> BFS(Vector2Int start, Vector2Int goal)

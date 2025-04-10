@@ -10,7 +10,8 @@ public class PlayerController : MonoBehaviour
     public bool isMove = false; //bool to check if the player is moving or 
     public IEnumerator MoveAlongPath(List<Vector2Int> path) //list from bfs
     {
-        isMove = true; //helps to lock input when the player is moving
+        isMove = true;
+        MovementManager.Instance.isAnyMoving = true; //helps to lock input when the player is moving
         foreach (Vector2Int step in path)
         {
             Vector3 targetPos = new Vector3(step.x, 0.5f, step.y); //converts basic grid pos like x, y in to the actual position 3d x,y,z
@@ -23,6 +24,9 @@ public class PlayerController : MonoBehaviour
             currentY = step.y;
         }
         isMove = false;
+        MovementManager.Instance.isAnyMoving = false;
         Debug.Log("cjhra");
+
+
     }
 }
